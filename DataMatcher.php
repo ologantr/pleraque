@@ -31,6 +31,7 @@ class DataMatcher
                 $res = is_string($to_check) && strlen($to_check) !== 0;
                 break;
             case "#int#":
+                var_dump($to_check);
                 $res = is_int($to_check);
                 break;
             case "#dict#":
@@ -48,8 +49,9 @@ class DataMatcher
 
         if(!$res)
         {
-            $msg = "type mismatch on $to_check, expected $type";
-            throw new RestException(StatusCodes::BAD_REQUEST, $msg);
+            $t = str_replace("#", "", $type);
+            throw new RestException(StatusCodes::BAD_REQUEST, "type mismatch " .
+                                    "on $to_check, expected $t");
         }
 
         return true;
