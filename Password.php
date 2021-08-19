@@ -35,6 +35,24 @@ final class Password
         self::$hashCost = $cost;
     }
 
+    // This function is to be called in a test environment
+    // to test your server and set the optimal hash cost
+    public static function getOptimalHashCost(float $timeTarget = 0.08) : int
+    {
+        $cost = 8;
+
+        do
+        {
+            $cost++;
+            $start = microtime(true);
+            password_hash("mdUapvHP9yxA98kP", \PASSWORD_DEFAULT,
+                          ["cost" => $cost]);
+            $end = microtime(true);
+        } while(($end - $start) < $timeTarget);
+
+        return $cost;
+    }
+
     public static function fromHash(string $enc) : self
     {
         // PASSWORD_DEFAULT/BCRYPT, TODO: PASSWORD_ARGON
