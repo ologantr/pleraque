@@ -4,7 +4,8 @@ namespace Pleraque;
 final class Password
 {
     private $enc;
-    private const MIN_PASSWORD_LENGTH = 8;
+    private static $minPasswordLength = 8;
+    private static $hashCost = 10;
 
     private function __construct(string $enc)
     {
@@ -13,13 +14,25 @@ final class Password
 
     public static function fromPlaintext(string $plain) : self
     {
-        if(strlen($plain) < self::MIN_PASSWORD_LENGTH)
+        if(strlen($plain) < self::$minPasswordLength)
             throw new RestException(StatusCodes::BAD_REQUEST,
                                     "password must be at least " .
-                                    self::MIN_PASSWORD_LENGTH .
+                                    self::$minPasswordLength .
                                     " characters long");
 
-        return new self(password_hash($plain, \PASSWORD_DEFAULT));
+        return new self(password_hash($plain,
+                                      \PASSWORD_DEFAULT,
+                                      ["cost" => self::$hashCost]));
+    }
+
+    public static function setMinPasswordLength(int $length) : void
+    {
+        self::$minPasswordLength = $length;
+    }
+
+    public static function setHashCost(int $cost) : void
+    {
+        self::$hashCost = $cost;
     }
 
     public static function fromHash(string $enc) : self
