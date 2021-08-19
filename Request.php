@@ -48,5 +48,30 @@ class Request
     {
         return $this->body;
     }
+
+    public function getHeaders() : array
+    {
+        $regex = new Regex("#^HTTP_*#");
+
+        $h = function(string $key) : string
+        {
+            return implode("-", array_map(function(string $word) : string
+                                          {
+                                              return ucwords(strtolower($word));
+                                          }, explode("_", str_replace("HTTP_",
+                                                                      "",
+                                                                      $key))));
+        };
+
+        $filtered_server = array_filter($_SERVER,
+                                        function(string $k) : bool
+                                        {
+                                            return $regex->match($k);
+                                        }, ARRAY_FILTER_USE_KEY);
+
+        return array_combine(array_map($h,
+                                       array_keys($filtered_server)),
+                             array_values($filtered_server));
+    }
 }
 ?>
