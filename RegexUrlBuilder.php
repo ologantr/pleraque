@@ -4,7 +4,7 @@ namespace Pleraque;
 
 class RegexUrlBuilder
 {
-    private $regexString = "#/";
+    private $regexString = "#^/";
 
     private function validateRange(string $range) : void
     {
