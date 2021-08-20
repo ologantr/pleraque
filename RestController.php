@@ -49,20 +49,26 @@ class RestController
     {
         try
         {
-            foreach($this->commandDict as $method => $dict)
+            foreach($this->commandDict as $method => $methodRoutes)
             {
                 if($this->request->getMethod() == $method)
                 {
-                    foreach($dict as $route)
+                    foreach($methodRoutes as $route)
+                    {
                         if($route->match($this->request))
                         {
                             $route->execute()->return();
                             exit();
                         }
+                    }
+
+                    throw new RestException(StatusCodes::NOT_FOUND,
+                                            "route not found");
                 }
             }
 
-            throw new RestException(StatusCodes::NOT_FOUND, "route not found");
+            throw new RestException(StatusCodes::NOT_FOUND,
+                                    "route not found");
         }
         catch(RestException $e)
         {
