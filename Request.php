@@ -6,12 +6,14 @@ class Request
     private $reqUrl;
     private $method;
     private $body;
+    private $headers;
 
     public function __construct()
     {
         $this->setUrl();
         $this->setMethod();
         $this->setBody();
+        $this->setHeaders();
     }
 
     private function setUrl() : void
@@ -34,22 +36,7 @@ class Request
             $this->body = JsonString::fromArray([]);
     }
 
-    public function getUrl() : string
-    {
-        return $this->reqUrl;
-    }
-
-    public function getMethod() : string
-    {
-        return $this->method;
-    }
-
-    public function getBody() : JsonString
-    {
-        return $this->body;
-    }
-
-    public function getHeaders() : array
+    private function setHeaders() : void
     {
         $regex = new Regex("#^HTTP_*#");
 
@@ -69,9 +56,29 @@ class Request
                                             return $regex->match($k);
                                         }, ARRAY_FILTER_USE_KEY);
 
-        return array_combine(array_map($h,
-                                       array_keys($filtered_server)),
-                             array_values($filtered_server));
+        $this->headers = array_combine(array_map($h,
+                                                 array_keys($filtered_server)),
+                                       array_values($filtered_server));
+    }
+
+    public function getUrl() : string
+    {
+        return $this->reqUrl;
+    }
+
+    public function getMethod() : string
+    {
+        return $this->method;
+    }
+
+    public function getBody() : JsonString
+    {
+        return $this->body;
+    }
+
+    public function getHeaders() : array
+    {
+        return $this->headers;
     }
 }
 ?>
