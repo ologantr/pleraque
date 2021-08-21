@@ -91,7 +91,8 @@ class DataMatcher
     {
         foreach($this->check as $key => $value)
         {
-            if(isset($this->data[$key]))
+            if(!empty($this->data[$key]) ||
+               is_null($this->data[$key]))
                 $this->match_type($value, $this->data[$key]);
             else
                 throw new RestException(StatusCodes::BAD_REQUEST,
