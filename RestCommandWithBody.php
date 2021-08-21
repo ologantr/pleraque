@@ -12,11 +12,6 @@ abstract class RestCommandWithBody extends RestCommand
         $this->dataPattern = $dataPattern;
     }
 
-    private function resetFields() : void
-    {
-        $this->dataPattern = array_keys($this->dataPattern);
-    }
-
     private function escapeInput() : void
     {
         array_walk_recursive($this->body, function(&$value, $key)
@@ -49,7 +44,6 @@ abstract class RestCommandWithBody extends RestCommand
     {
         $this->escapeInput();
         $this->checkBody();
-        $this->resetFields();
     }
 
     protected function getBody()
