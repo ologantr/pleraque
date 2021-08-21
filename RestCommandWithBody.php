@@ -16,7 +16,8 @@ abstract class RestCommandWithBody extends RestCommand
     {
         array_walk_recursive($this->body, function(&$value, $key)
         {
-            $value = htmlspecialchars($value);
+            if(!is_null($value))
+                $value = htmlspecialchars($value);
         });
     }
 
