@@ -27,6 +27,9 @@ class DataMatcher
             case "#string#":
                 $res = is_string($to_check);
                 break;
+            case "#?string#":
+                $res = is_string($to_check) || is_null($to_check);
+                break;
             case "#string_notempty#":
                 $res = is_string($to_check) && strlen($to_check) !== 0;
                 break;
