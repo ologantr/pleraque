@@ -51,7 +51,7 @@ class Request
         };
 
         $filtered_server = array_filter($_SERVER,
-                                        function(string $k) : bool
+                                        function(string $k) use ($regex): bool
                                         {
                                             return $regex->match($k);
                                         }, ARRAY_FILTER_USE_KEY);
