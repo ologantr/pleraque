@@ -4,20 +4,20 @@ namespace Pleraque;
 class RestController
 {
     private $request;
-    private $commandDict = [];
+    private $requestMethod;
+    private $commands = [];
 
     public function __construct()
     {
         $this->request = new Request();
+        $this->requestMethod = $this->request->getMethod();
     }
 
     private function addCommandWithMethod(string $method,
                                           RestCommand $command) : void
     {
-        if(!array_key_exists($method, $this->commandDict))
-            $this->commandDict[$method] = [];
-
-        array_push($this->commandDict[$method], $command);
+        if($method == $this->requestMethod)
+            array_push($this->commands, $command);
     }
 
     public function addGetCommand(RestCommand $command) : void
@@ -49,21 +49,12 @@ class RestController
     {
         try
         {
-            foreach($this->commandDict as $method => $methodRoutes)
+            foreach($this->commands as $route)
             {
-                if($this->request->getMethod() == $method)
+                if($route->match($this->request))
                 {
-                    foreach($methodRoutes as $route)
-                    {
-                        if($route->match($this->request))
-                        {
-                            $route->execute()->return();
-                            exit();
-                        }
-                    }
-
-                    throw new RestException(StatusCodes::NOT_FOUND,
-                                            "route not found");
+                    $route->execute()->return();
+                    exit();
                 }
             }
 
