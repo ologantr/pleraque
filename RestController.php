@@ -49,7 +49,7 @@ class RestController
         {
             foreach($this->commands as $route)
             {
-                if($route->match($this->request))
+                if($route->match())
                 {
                     $route->execute()->return();
                     exit();

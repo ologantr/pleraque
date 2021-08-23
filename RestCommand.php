@@ -9,11 +9,11 @@ abstract class RestCommand
     public function __construct(Regex $regex)
     {
         $this->regex = $regex;
+        $this->url = Request::getInstance()->getUrl();
     }
 
-    public function match(Request $request) : bool
+    public function match() : bool
     {
-        $this->url = Request::getInstance()->getUrl();
         return $this->regex->match($this->url);
     }
 
