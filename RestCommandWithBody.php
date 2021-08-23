@@ -10,6 +10,7 @@ abstract class RestCommandWithBody extends RestCommand
     {
         parent::__construct($regex);
         $this->dataPattern = $dataPattern;
+        $this->body = Request::getInstance()->getBody()->toArray();
     }
 
     private function escapeInput() : void
@@ -33,12 +34,6 @@ abstract class RestCommandWithBody extends RestCommand
             throw new RestException(StatusCodes::BAD_REQUEST,
                                     "malformed body: $msg");
         }
-    }
-
-    public function match(Request $request) : bool
-    {
-        $this->body = $request->getBody()->toArray();
-        return parent::match($request);
     }
 
     protected function preExecutionChecks() : void

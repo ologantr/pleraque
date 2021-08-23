@@ -3,14 +3,12 @@ namespace Pleraque;
 
 class RestController
 {
-    private $request;
     private $requestMethod;
     private $commands = [];
 
     public function __construct()
     {
-        $this->request = new Request();
-        $this->requestMethod = $this->request->getMethod();
+        $this->requestMethod = Request::getInstance()->getMethod();
     }
 
     private function addCommandWithMethod(string $method,

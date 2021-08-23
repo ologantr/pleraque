@@ -1,19 +1,29 @@
 <?php
 namespace Pleraque;
 
-class Request
+final class Request
 {
+    private static $instance = null;
     private $reqUrl;
     private $method;
     private $body;
     private $headers;
 
-    public function __construct()
+    private function __clone() {}
+    private function __wakeup() {}
+
+    private function __construct()
     {
         $this->setUrl();
         $this->setMethod();
         $this->setBody();
         $this->setHeaders();
+    }
+
+    public static function getInstance() : self
+    {
+        if(self::$instance == null) self::$instance = new static();
+        return self::$instance;
     }
 
     private function setUrl() : void
