@@ -13,7 +13,7 @@ abstract class RestCommand
 
     public function match(Request $request) : bool
     {
-        $this->url = $request->getUrl();
+        $this->url = Request::getInstance()->getUrl();
         return $this->regex->match($this->url);
     }
 
