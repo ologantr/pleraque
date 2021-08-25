@@ -28,6 +28,11 @@ class Database
             throw new \Exception("Database::connect must be called once");
     }
 
+    public function lastInsertId(?string $name = null)
+    {
+        return $this->dbconn->lastInsertId($name);
+    }
+
     public function getQuery(string $query, array $arr = null) : Query
     {
         return new class($query, $this->dbconn, $arr) extends Query
