@@ -6,9 +6,9 @@ abstract class RestCommand
     private $regex;
     private $url;
 
-    public function __construct(Regex $regex)
+    public function __construct(RegexUrlBuilder $regex)
     {
-        $this->regex = $regex;
+        $this->regex = $regex->buildRegex();
         $this->url = Request::getInstance()->getUrl();
     }
 
