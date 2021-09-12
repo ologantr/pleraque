@@ -3,124 +3,135 @@ namespace Pleraque;
 
 class DataMatcher
 {
-    private $data;
-    private $check;
+    private $dictPattern;
+    private $fnDict;
+    private $dateFormat;
 
-    public function __construct(array $data)
+    public function __construct(array $dictPattern)
     {
-        $this->data = $data;
+        $this->dictPattern = $dictPattern;
+        $this->buildFnDict();
+        $this->checkDictPattern();
     }
 
-    private function is_dictionary(array $arr) : bool
+    private function checkDictPattern() : void
     {
-        if($arr == []) return false;
-        return array_keys($arr) !== range(0, count($arr) - 1);
+        if(!$this->isDictionary($this->dictPattern))
+            throw new \InvalidArgumentException("invalid pattern dictionary");
+
+        foreach($this->dictPattern as $name => $type)
+            if(!isset($this->fnDict["$type"]))
+                throw new \InvalidArgumentException("invalid pattern dictionary"
+                                                    . " - unknown type $type");
     }
 
-    private function match_type(string $type, $to_check) : bool
+    private function buildFnDict()
     {
-        $res = null;
-        $arr = is_array($to_check);
+        $this->fnDict = [
+            "#string#" => function($toCheck) : bool
+            {
+                return is_string($toCheck);
+            },
+            "#?string#" => function($toCheck) : bool
+            {
+                return is_string($toCheck) || is_null($toCheck);
+            },
+            "#string_notempty#" => function($toCheck) : bool
+            {
+                return is_string($toCheck) && strlen($toCheck) !== 0;
+            },
+            "#int#" => function($toCheck) : bool
+            {
+                return is_int($toCheck);
+            },
+            "#dict#" => function($toCheck) : bool
+            {
+                return is_array($toCheck) &&
+                    $this->isDictionary($toCheck);
+            },
+            "#array#" => function($toCheck) : bool
+            {
+                return is_array($toCheck) &&
+                    !$this->isDictionary($toCheck);
+            },
+            "#date#" => function($toCheck) : bool
+            {
+                if(!is_string($toCheck)) return false;
 
-        switch($type)
+                $this->checkDateWithFormat($toCheck);
+                return true;
+            }];
+    }
+
+    private function isDictionary(array $arr) : bool
+    {
+        $countOrig = count($arr);
+        $countFilter = count(array_filter(array_keys($arr),
+                                          function($elem) : bool
+                                          {
+                                              return is_string($elem);
+                                          }));
+
+        if($arr == [] || $countFilter == 0 || $countFilter < $countOrig)
+            return false;
+        else if($countOrig == $countFilter)
+            return true;
+
+        return false;
+    }
+
+    private function getDateFormatFromType(string $type) : string
+    {
+        $matches = (new Regex("#^\#date\#(.*)$#"))->getMatches($type);
+        return count($matches) == 0 || strlen($matches[0]) == 0 ?
+                               "Y-m-d" : $matches[0];
+    }
+
+    private function checkDateWithFormat(string $date) : void
+    {
+        \DateTimeImmutable::createFromFormat($this->dateFormat, $date);
+        $errors = \DateTimeImmutable::getLastErrors();
+
+        if($errors["error_count"] !== 0 || $errors["warning_count"] !== 0)
+            throw new \Exception("Date Error: " .
+                                 array_merge($errors["errors"],
+                                             $errors["warnings"])[0]);
+    }
+
+    private function matchType(string $type, $toCheck) : void
+    {
+        if((new Regex("#^\#date\#.*$#"))->match($type))
         {
-            case "#string#":
-                $res = is_string($to_check);
-                break;
-            case "#?string#":
-                $res = is_string($to_check) || is_null($to_check);
-                break;
-            case "#string_notempty#":
-                $res = is_string($to_check) && strlen($to_check) !== 0;
-                break;
-            case "#int#":
-                var_dump($to_check);
-                $res = is_int($to_check);
-                break;
-            case "#dict#":
-                $res = $arr && $this->is_dictionary($to_check);
-                break;
-            case "#array#":
-                $res = $arr && !$this->is_dictionary($to_check);
-                break;
-            case "#date#":
-                $res = is_string($to_check) && $this->is_date($to_check);
-                break;
-            default:
-                throw new \Exception("unknown type");
+            $this->dateFormat = $this->getDateFormatFromType($type);
+            $type = "#date#";
         }
 
-        if(!$res)
-        {
-            $t = str_replace("#", "", $type);
-            throw new RestException(StatusCodes::BAD_REQUEST, "type mismatch " .
-                                    "on $to_check, expected $t");
-        }
-
-        return true;
+        if(!($this->fnDict["$type"])($toCheck))
+            throw new \Exception("type mismatch on $toCheck - expected $type");
     }
 
-    private function is_date(string $date) : bool
+    private function matchDict(array $data) : void
     {
-        $year_first_regex = new Regex("#^\d{4}-\d{2}-\d{2}$#");
-        $year_last_regex = new Regex("#^\d{2}-\d{2}-\d{4}$#");
-
-        $year_first_match = $year_first_regex->match($date);
-        $year_last_match = $year_last_regex->match($date);
-
-        if($year_first_match) $year_first = true;
-        else if($year_last_match) $year_first = false;
-        else
-            throw new RestException(StatusCodes::BAD_REQUEST,
-                                    "invalid date format");
-
-        $arr = explode('-', $date);
-
-        if($year_first)
+        foreach($this->dictPattern as $key => $value)
         {
-            if(!checkdate($arr[1], $arr[2], $arr[0]))
-                throw new RestException(StatusCodes::BAD_REQUEST,
-                                        "invalid date - year first");
-        }
-        else
-            if(!checkdate($arr[1], $arr[0], $arr[2]))
-                throw new RestException(StatusCodes::BAD_REQUEST,
-                                        "invalid date - year last");
-
-        return true;
-    }
-
-    private function match_dict() : void
-    {
-        foreach($this->check as $key => $value)
-        {
-            if(!empty($this->data[$key]) ||
-               is_null($this->data[$key]))
-                $this->match_type($value, $this->data[$key]);
+            if(isset($data[$key]))
+                $this->matchType($value, $data[$key]);
             else
-                throw new RestException(StatusCodes::BAD_REQUEST,
-                                        "missing field: $key");
+                throw new \Exception("missing field: $key");
         }
     }
 
-    private function match_array() : void
+    private function checkDataCount(array $data) : void
     {
-        for($i = 0; $i < count($this->data); ++$i)
-            $this->match_type($this->check[$i], $this->data[$i]);
+        if(count($data) !== count($this->dictPattern))
+           throw new \Exception("count mismatch");
     }
 
-    public function match_with(array $check) : void
+    public function matchWith(array $data) : bool
     {
-        $this->check = $check;
-
-        if(count($this->data) !== count($this->check))
-            throw new RestException(StatusCodes::BAD_REQUEST,
-                                    "count mismatch");
-
-        if($this->is_dictionary($this->data))
-            $this->match_dict($this->check);
-        else
-            $this->match_array($this->check);
+        $this->checkDataCount($data);
+        $this->matchDict($data);
+        return true;
     }
 }
 ?>

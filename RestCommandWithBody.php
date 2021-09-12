@@ -26,7 +26,7 @@ abstract class RestCommandWithBody extends RestCommand
     {
         try
         {
-            (new DataMatcher($this->body))->match_with($this->dataPattern);
+            (new DataMatcher($this->dataPattern))->matchWith($this->body);
         }
         catch(\Exception $e)
         {
