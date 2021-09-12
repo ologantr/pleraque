@@ -6,7 +6,8 @@ abstract class RestCommandWithBody extends RestCommand
     private $dataPattern;
     private $body;
 
-    public function __construct(Regex $regex, array $dataPattern)
+    public function __construct(RegexUrlBuilder $regex,
+                                array $dataPattern)
     {
         parent::__construct($regex);
         $this->dataPattern = $dataPattern;
