@@ -20,7 +20,11 @@ class RestController
 
     public function addGetCommand(RestCommand $command) : void
     {
-        $this->addCommandWithMethod(HttpMethods::GET, $command);
+        if($command instanceof RestCommandWithBody)
+            throw new \InvalidArgumentException("GET doesn't allow " .
+                                                "requests with a body");
+        else
+            $this->addCommandWithMethod(HttpMethods::GET, $command);
     }
 
     public function addPostCommand(RestCommand $command) : void
