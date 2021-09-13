@@ -6,10 +6,10 @@ abstract class RestCommandWithBody extends RestCommand
     private $dataPattern;
     private $body;
 
-    public function __construct(RegexUrlBuilder $regex,
+    public function __construct(string $uriSpec,
                                 array $dataPattern)
     {
-        parent::__construct($regex);
+        parent::__construct($uriSpec);
         $this->dataPattern = $dataPattern;
         $this->body = Request::getInstance()->getBody()->toArray();
     }
