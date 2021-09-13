@@ -3,18 +3,18 @@ namespace Pleraque;
 
 abstract class RestCommand
 {
-    private $regex;
+    private $uriSpec;
     private $url;
 
-    public function __construct(RegexUrlBuilder $regex)
+    public function __construct(string $uriSpec)
     {
-        $this->regex = $regex->buildRegex();
         $this->url = Request::getInstance()->getUrl();
+        $this->uriSpec = new UriSpec($uriSpec);
     }
 
     public function match() : bool
     {
-        return $this->regex->match($this->url);
+        return $this->uriSpec->matchWith($this->url);
     }
 
     abstract protected function preExecutionChecks() : void;
@@ -28,9 +28,9 @@ abstract class RestCommand
         return $this->buildResponse();
     }
 
-    final protected function getUrlMatches() : array
+    final protected function getParameters() : array
     {
-        return $this->regex->getMatches($this->url);
+        return $this->uriSpec->getParameters($this->url);
     }
 }
 ?>
