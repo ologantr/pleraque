@@ -4,6 +4,7 @@ namespace Pleraque;
 final class Request
 {
     private static $instance = null;
+    private static $urlRetrieverFn;
     private $reqUrl;
     private $method;
     private $body;
@@ -26,9 +27,17 @@ final class Request
         return self::$instance;
     }
 
+    public static function setUrlRetrieverFunction(IUrlRetrieverFunction $fn)
+        : void
+    {
+        self::$urlRetrieverFn = $fn;
+    }
+
     private function setUrl() : void
     {
-        $this->reqUrl = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
+        $this->reqUrl = isset(self::$urlRetrieverFn) ?
+                      self::$urlRetrieverFn->getUrl() :
+                      parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
     }
 
     private function setMethod() : void
