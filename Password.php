@@ -55,11 +55,6 @@ final class Password
 
     public static function fromHash(string $enc) : self
     {
-        // PASSWORD_DEFAULT/BCRYPT, TODO: PASSWORD_ARGON
-        if(!(new Regex("#^\$2[aby]?\$\d{1,2}\$[.\/A-Za-z0-9]{53}$#"))
-           ->match($enc))
-            throw new \InvalidArgumentException("invalid hash");
-
         return new self($enc);
     }
 
