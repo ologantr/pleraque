@@ -17,7 +17,6 @@ class JsonResponse extends ResponseWithBody
 
     protected function setHeaders() : void
     {
-        parent::setHeaders();
         header('Content-Type: application/json; charset=utf-8');
     }
 
