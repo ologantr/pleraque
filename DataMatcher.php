@@ -114,7 +114,7 @@ class DataMatcher
     {
         foreach($this->dictPattern as $key => $value)
         {
-            if(isset($data[$key]))
+            if(array_key_exists($key, $data))
                 $this->matchType($value, $data[$key]);
             else
                 throw new \Exception("missing field: $key");
