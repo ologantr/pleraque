@@ -8,17 +8,19 @@ It comes with a Database class to manage your database connection and to
 execute your queries, and a main REST class to manage your routes.
 
 ## How to use it?
-This library right now is not ready for Composer, so for the time
-being you'll have to checkout this repo and use it.
+This library is not yet ready for Composer, so for the time
+being you'll have to download archives
+[here](https://ologantr.xyz/distfiles/pleraque/).
 
 Maybe I'll put it on Composer for general availability in the near future.
 
 ## Conclusions
-Feel free to send me any concerns and write a ticket here if you find a problem/bug.
+Feel free to send me any concerns and send me a mail if you find a 
+problem/bug.
 
 I'm working on an API documentation right now.
 
-## Working example (as of current trunk)
+## Working example
 Note that API and results are subject to change as this is a work in progress.
 
 ```
