@@ -3,7 +3,7 @@ namespace Pleraque;
 
 abstract class Response
 {
-    protected $code;
+    protected int $code;
 
     public function __construct(int $code)
     {

@@ -3,8 +3,8 @@ namespace Pleraque;
 
 abstract class RestCommand
 {
-    private $uriSpec;
-    private $url;
+    private UriSpec $uriSpec;
+    private string $url;
 
     public function __construct(string $uriSpec)
     {

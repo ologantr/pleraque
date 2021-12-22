@@ -3,7 +3,7 @@ namespace Pleraque;
 
 class ParameterRegexToken extends UriToken
 {
-    private $regex;
+    private string $regex;
 
     public function __construct(string $token, string $regex)
     {

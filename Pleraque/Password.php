@@ -3,9 +3,9 @@ namespace Pleraque;
 
 final class Password
 {
-    private $enc;
-    private static $minPasswordLength = 8;
-    private static $hashCost = 10;
+    private string $enc;
+    private static int $minPasswordLength = 8;
+    private static int $hashCost = 10;
 
     private function __construct(string $enc)
     {

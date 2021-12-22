@@ -3,8 +3,8 @@ namespace Pleraque;
 
 class Database
 {
-    private static $instance = null;
-    private $dbconn;
+    private static ?self $instance = null;
+    private \PDO $dbconn;
 
     private function __clone() {}
     private function __wakeup() {}

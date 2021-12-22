@@ -3,7 +3,7 @@ namespace Pleraque;
 
 abstract class RestCommandWithBody extends RestCommand
 {
-    private $dataPattern;
+    private array $dataPattern;
     private $body;
 
     public function __construct(string $uriSpec,
