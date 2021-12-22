@@ -9,21 +9,19 @@ class Database
     private function __clone() {}
     private function __wakeup() {}
 
-    private function __construct(\PDO $dbConn)
+    private function __construct(string $pdoString, string $uname,
+                                 string $pwd)
     {
-        $this->dbconn = $dbConn;
+        $this->dbconn = new \PDO($pdoString, $uname, $pwd);
         $this->dbconn->setAttribute(\PDO::ATTR_ERRMODE,
                                     \PDO::ERRMODE_EXCEPTION);
     }
 
     public static function connect(string $pdoString, string $uname = null,
-                                    string $pwd = null) : void
+                                   string $pwd = null) : void
     {
         if(self::$instance == null)
-        {
-            $dbconn = new \PDO($pdoString, $uname, $pwd);
-            self::$instance = new static($dbconn);
-        }
+            self::$instance = new static($pdoString, $uname, $pwd);
         else
             throw new \Exception("Database::connect must be called once");
     }
