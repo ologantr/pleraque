@@ -10,7 +10,7 @@ class JsonResponse extends ResponseWithBody
                                 "error" => $error]);
     }
 
-    public static function data(int $code, JsonString $data) : self
+    public static function data(int $code, U\JsonString $data) : self
     {
         return new self($code, ["status" => $code,
                                 "data" => $data->toArray()]);
