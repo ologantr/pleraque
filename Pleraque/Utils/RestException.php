@@ -1,5 +1,6 @@
 <?php
 namespace Pleraque\Utils;
+use Pleraque as P;
 
 class RestException extends \Exception
 {
@@ -8,7 +9,7 @@ class RestException extends \Exception
     public function __construct(int $code, string $message)
     {
         parent::__construct($message);
-        $this->response = JsonResponse::error($code, $message);
+        $this->response = P\JsonResponse::error($code, $message);
     }
 
     public function emitError()
