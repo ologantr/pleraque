@@ -25,8 +25,9 @@ Note that API and results are subject to change as this is a work in progress.
 
 ```
 use Pleraque as P;
+use Pleraque\Utils as U;
 
-$controller = new P\RestController();
+$c = new P\RestController();
 
 $c->addGetCommand(new class("test")
                   extends P\RestCommand
@@ -43,8 +44,8 @@ $c->addGetCommand(new class("test")
 
     protected function buildResponse() : P\Response
     {
-        return P\JsonResponse::data(P\StatusCodes::OK,
-                                    P\JsonString::fromArray(["res" => 1]));
+        return P\JsonResponse::data(U\StatusCodes::OK,
+                                    U\JsonString::fromArray(["res" => 1]));
     }
 });
 
@@ -64,8 +65,8 @@ $c->addGetCommand(new class("test/{id}")
     protected function buildResponse() : P\Response
     {
         $m = $this->getParameters();
-        return P\JsonResponse::data(P\StatusCodes::OK,
-                                    P\JsonString::fromArray(["id" => $m["id"]]));
+        return P\JsonResponse::data(U\StatusCodes::OK,
+                                    U\JsonString::fromArray(["id" => $m["id"]]));
     }
 });
 
@@ -85,8 +86,8 @@ $c->addGetCommand(new class("user/{name:[a-z]+}")
     protected function buildResponse() : P\Response
     {
         $m = $this->getParameters();
-        return P\JsonResponse::data(P\StatusCodes::OK,
-                                    P\JsonString::fromArray(["name" => $m["name"]]));
+        return P\JsonResponse::data(U\StatusCodes::OK,
+                                    U\JsonString::fromArray(["name" => $m["name"]]));
     }
 });
 ```
