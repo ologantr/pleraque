@@ -1,7 +1,7 @@
 <?php
-namespace Pleraque;
+namespace Pleraque\Query;
 
-class QueryStringOutput implements QueryOutput
+class StringOutput implements IOutput
 {
     public function getOutput(\PDOStatement $stmt)
     {
