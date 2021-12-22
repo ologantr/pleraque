@@ -1,5 +1,6 @@
 <?php
 namespace Pleraque;
+use Pleraque\Query as Q;
 
 class Database
 {
@@ -31,9 +32,9 @@ class Database
         return $this->dbconn->lastInsertId($name);
     }
 
-    public function getQuery(string $query, array $arr = null) : Query
+    public function getQuery(string $query, array $arr = null) : Q\Query
     {
-        return new class($query, $this->dbconn, $arr) extends Query
+        return new class($query, $this->dbconn, $arr) extends Q\Query
         {
             private $dbconn;
 
@@ -73,7 +74,7 @@ class Database
         $this->dbconn->rollBack();
     }
 
-    public function withTransaction(Query ...$queries) : void
+    public function withTransaction(Q\Query ...$queries) : void
     {
         $this->startTransaction();
 

@@ -1,7 +1,7 @@
 <?php
 namespace Pleraque;
 
-interface QueryOutput
+interface IOutput
 {
     public function getOutput(\PDOStatement $stmt);
 }

@@ -1,8 +1,8 @@
 <?php
 // $Id$
-namespace Pleraque;
+namespace Pleraque\Query;
 
-class QueryGeneratorOutput implements QueryOutput
+class GeneratorOutput implements IOutput
 {
     public function getOutput(\PDOStatement $stmt)
     {

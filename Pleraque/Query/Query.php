@@ -1,5 +1,5 @@
 <?php
-namespace Pleraque;
+namespace Pleraque\Query;
 
 abstract class Query implements \Stringable
 {
