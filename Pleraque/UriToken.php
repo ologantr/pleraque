@@ -1,7 +1,7 @@
 <?php
 namespace Pleraque;
 
-class UriToken
+class UriToken implements \Stringable
 {
     private string $tokenName;
 
@@ -10,7 +10,7 @@ class UriToken
         $this->tokenName = $tokenName;
     }
 
-    public function __toString()
+    public function __toString() : string
     {
         return $this->tokenName;
     }

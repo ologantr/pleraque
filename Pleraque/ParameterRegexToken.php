@@ -17,7 +17,7 @@ class ParameterRegexToken extends UriToken
         (new Regex("#{$this->regex}#"));
     }
 
-    public function __toString()
+    public function __toString() : string
     {
         return "({$this->regex})";
     }
