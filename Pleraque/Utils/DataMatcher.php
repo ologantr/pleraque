@@ -1,5 +1,5 @@
 <?php
-namespace Pleraque;
+namespace Pleraque\Utils;
 
 class DataMatcher
 {

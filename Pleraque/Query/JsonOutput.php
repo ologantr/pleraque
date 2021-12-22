@@ -1,5 +1,6 @@
 <?php
 namespace Pleraque\Query;
+use Pleraque\Utils as U;
 
 class JsonOutput implements IOutput
 {
@@ -9,7 +10,7 @@ class JsonOutput implements IOutput
         if(!is_array($res) || !$res || is_null(reset($res)) ||
            empty($res))
             throw new \Exception("empty result");
-        return JsonString::fromArray($res);
+        return U\JsonString::fromArray($res);
     }
 }
 ?>

@@ -1,12 +1,13 @@
 <?php
 namespace Pleraque;
+use Pleraque\Utils as U;
 
 final class UriSpec
 {
     private string $uriSpec;
     private array $tokens;
     private array $lexedArray = [];
-    private Regex $regex;
+    private U\Regex $regex;
 
     private const TOKEN_TYPES = [UriToken::class =>
                                  "#^[A-Za-z0-9\_\-]+$#",
@@ -34,15 +35,15 @@ final class UriSpec
     {
         foreach($this->tokens as $token)
         {
-            if((new Regex(self::TOKEN_TYPES[UriToken::class]))
+            if((new U\Regex(self::TOKEN_TYPES[UriToken::class]))
                ->match($token))
                 array_push($this->lexedArray,
                            new UriToken(str_replace(["{", "}"], "", $token)));
-            else if((new Regex(self::TOKEN_TYPES[ParameterRegexToken::class]))
+            else if((new U\Regex(self::TOKEN_TYPES[ParameterRegexToken::class]))
                ->match($token))
             {
                 $reg = "#^\{([A-Za-z0-9\_\-]+)\:(?:[\ ]+)?(.*)\}$#";
-                $matches = (new Regex($reg))->getMatches($token);
+                $matches = (new U\Regex($reg))->getMatches($token);
                 $parameterName = $matches[0];
                 $requestedRegex = $matches[1];
 
@@ -50,7 +51,7 @@ final class UriSpec
                            new ParameterRegexToken($parameterName,
                                                    $requestedRegex));
             }
-            else if((new Regex(self::TOKEN_TYPES[ParameterToken::class]))
+            else if((new U\Regex(self::TOKEN_TYPES[ParameterToken::class]))
                ->match($token))
                 array_push($this->lexedArray,
                            new ParameterToken(str_replace(["{", "}"], "",
@@ -62,7 +63,7 @@ final class UriSpec
 
     private function createRegex() : void
     {
-        $this->regex = new Regex("#^" . implode("/", $this->lexedArray)
+        $this->regex = new U\Regex("#^" . implode("/", $this->lexedArray)
                                  . "$#");
     }
 

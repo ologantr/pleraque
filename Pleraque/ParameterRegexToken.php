@@ -1,5 +1,6 @@
 <?php
 namespace Pleraque;
+use Pleraque\Utils as U;
 
 class ParameterRegexToken extends UriToken
 {
@@ -14,7 +15,7 @@ class ParameterRegexToken extends UriToken
 
     private function validateRegex() : void
     {
-        (new Regex("#{$this->regex}#"));
+        (new U\Regex("#{$this->regex}#"));
     }
 
     public function __toString() : string

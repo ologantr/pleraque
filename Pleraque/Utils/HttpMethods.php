@@ -1,5 +1,5 @@
 <?php
-namespace Pleraque;
+namespace Pleraque\Utils;
 
 abstract class HttpMethods
 {

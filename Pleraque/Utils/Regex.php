@@ -1,5 +1,5 @@
 <?php
-namespace Pleraque;
+namespace Pleraque\Utils;
 
 final class Regex implements \Stringable
 {
