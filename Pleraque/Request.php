@@ -12,7 +12,7 @@ final class Request
     private array $headers;
 
     private function __clone() {}
-    private function __wakeup() {}
+    public function __wakeup() {}
 
     private function __construct()
     {
