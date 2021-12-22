@@ -3,9 +3,9 @@ namespace Pleraque;
 
 class DataMatcher
 {
-    private $dictPattern;
-    private $fnDict;
-    private $dateFormat;
+    private array $dictPattern;
+    private array $fnDict;
+    private string $dateFormat;
 
     public function __construct(array $dictPattern)
     {

@@ -3,8 +3,8 @@ namespace Pleraque;
 
 final class Regex
 {
-    private $regex;
-    private $matches = [];
+    private string $regex;
+    private array $matches = [];
 
     public function __construct(string $regex)
     {

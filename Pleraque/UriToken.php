@@ -3,7 +3,7 @@ namespace Pleraque;
 
 class UriToken
 {
-    private $tokenName;
+    private string $tokenName;
 
     public function __construct(string $tokenName)
     {

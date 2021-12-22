@@ -3,9 +3,9 @@ namespace Pleraque;
 
 abstract class Query
 {
-    protected $query;
-    protected $stmt;
-    private $args;
+    protected string $query;
+    protected \PDOStatement $stmt;
+    private array $args;
 
     public function __construct(string $q, array $arr = null)
     {

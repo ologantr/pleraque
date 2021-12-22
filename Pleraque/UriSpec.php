@@ -3,10 +3,10 @@ namespace Pleraque;
 
 final class UriSpec
 {
-    private $uriSpec;
-    private $tokens;
-    private $lexedArray = [];
-    private $regex;
+    private string $uriSpec;
+    private array $tokens;
+    private array $lexedArray = [];
+    private Regex $regex;
 
     private const TOKEN_TYPES = [UriToken::class =>
                                  "#^[A-Za-z0-9\_\-]+$#",

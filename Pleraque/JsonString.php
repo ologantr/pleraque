@@ -3,7 +3,7 @@ namespace Pleraque;
 
 final class JsonString
 {
-    private $json;
+    private string $json;
 
     private function __construct(string $json)
     {

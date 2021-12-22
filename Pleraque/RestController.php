@@ -3,8 +3,8 @@ namespace Pleraque;
 
 class RestController
 {
-    private $requestMethod;
-    private $commands = [];
+    private string $requestMethod;
+    private array $commands = [];
 
     public function __construct()
     {

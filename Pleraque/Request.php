@@ -3,12 +3,12 @@ namespace Pleraque;
 
 final class Request
 {
-    private static $instance = null;
-    private static $urlRetrieverFn;
-    private $reqUrl;
-    private $method;
-    private $body;
-    private $headers;
+    private static ?self $instance = null;
+    private static IURLRetrieverFunction $urlRetrieverFn;
+    private string $reqUrl;
+    private string $method;
+    private JsonString $body;
+    private array $headers;
 
     private function __clone() {}
     private function __wakeup() {}
