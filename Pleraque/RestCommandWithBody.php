@@ -1,5 +1,6 @@
 <?php
 namespace Pleraque;
+use Pleraque\Utils as U;
 
 abstract class RestCommandWithBody extends RestCommand
 {
@@ -27,12 +28,12 @@ abstract class RestCommandWithBody extends RestCommand
     {
         try
         {
-            (new DataMatcher($this->dataPattern))->matchWith($this->body);
+            (new U\DataMatcher($this->dataPattern))->matchWith($this->body);
         }
         catch(\Exception $e)
         {
             $msg = $e->getMessage();
-            throw new RestException(StatusCodes::BAD_REQUEST,
+            throw new U\RestException(U\StatusCodes::BAD_REQUEST,
                                     "malformed body: $msg");
         }
     }

@@ -1,5 +1,6 @@
 <?php
 namespace Pleraque;
+use Pleraque\Utils as U;
 
 class JsonResponse extends ResponseWithBody
 {
@@ -22,7 +23,7 @@ class JsonResponse extends ResponseWithBody
 
     public function return() : void
     {
-        echo JsonString::fromArray($this->body);
+        echo U\JsonString::fromArray($this->body);
     }
 }
 ?>

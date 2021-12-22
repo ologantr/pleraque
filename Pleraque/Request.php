@@ -1,5 +1,6 @@
 <?php
 namespace Pleraque;
+use Pleraque\Utils as U;
 
 final class Request
 {
@@ -7,7 +8,7 @@ final class Request
     private static IURLRetrieverFunction $urlRetrieverFn;
     private string $reqUrl;
     private string $method;
-    private JsonString $body;
+    private U\JsonString $body;
     private array $headers;
 
     private function __clone() {}
@@ -50,14 +51,14 @@ final class Request
         $body = file_get_contents("php://input");
 
         if(!empty($body))
-            $this->body = JsonString::fromString($body);
+            $this->body = U\JsonString::fromString($body);
         else
-            $this->body = JsonString::fromArray([]);
+            $this->body = U\JsonString::fromArray([]);
     }
 
     private function setHeaders() : void
     {
-        $regex = new Regex("#^HTTP_*#");
+        $regex = new U\Regex("#^HTTP_*#");
 
         $h = function(string $key) : string
         {
@@ -90,7 +91,7 @@ final class Request
         return $this->method;
     }
 
-    public function getBody() : JsonString
+    public function getBody() : U\JsonString
     {
         return $this->body;
     }

@@ -1,5 +1,6 @@
 <?php
 namespace Pleraque;
+use Pleraque\Utils as U;
 
 class RestController
 {
@@ -24,27 +25,27 @@ class RestController
             throw new \InvalidArgumentException("GET doesn't allow " .
                                                 "requests with a body");
         else
-            $this->addCommandWithMethod(HttpMethods::GET, $command);
+            $this->addCommandWithMethod(U\HttpMethods::GET, $command);
     }
 
     public function addPostCommand(RestCommand $command) : void
     {
-        $this->addCommandWithMethod(HttpMethods::POST, $command);
+        $this->addCommandWithMethod(U\HttpMethods::POST, $command);
     }
 
     public function addPutCommand(RestCommand $command) : void
     {
-        $this->addCommandWithMethod(HttpMethods::PUT, $command);
+        $this->addCommandWithMethod(U\HttpMethods::PUT, $command);
     }
 
     public function addPatchCommand(RestCommand $command) : void
     {
-        $this->addCommandWithMethod(HttpMethods::PATCH, $command);
+        $this->addCommandWithMethod(U\HttpMethods::PATCH, $command);
     }
 
     public function addDeleteCommand(RestCommand $command) : void
     {
-        $this->addCommandWithMethod(HttpMethods::DELETE, $command);
+        $this->addCommandWithMethod(U\HttpMethods::DELETE, $command);
     }
 
     public function route()
@@ -60,16 +61,16 @@ class RestController
                 }
             }
 
-            throw new RestException(StatusCodes::NOT_FOUND,
+            throw new U\RestException(U\StatusCodes::NOT_FOUND,
                                     "route not found");
         }
-        catch(RestException $e)
+        catch(U\RestException $e)
         {
             $e->emitError();
         }
         catch(\Exception $e)
         {
-            (JsonResponse::error(StatusCodes::INTERNAL_SERVER_ERROR,
+            (JsonResponse::error(U\StatusCodes::INTERNAL_SERVER_ERROR,
                                  $e->getMessage()))->return();
         }
     }
