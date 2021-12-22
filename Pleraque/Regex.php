@@ -1,7 +1,7 @@
 <?php
 namespace Pleraque;
 
-final class Regex
+final class Regex implements \Stringable
 {
     private string $regex;
     private array $matches = [];

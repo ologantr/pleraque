@@ -1,7 +1,7 @@
 <?php
 namespace Pleraque;
 
-final class Password
+final class Password implements \Stringable
 {
     private string $enc;
     private static int $minPasswordLength = 8;
@@ -58,7 +58,7 @@ final class Password
         return new self($enc);
     }
 
-    public function __toString()
+    public function __toString() : string
     {
         return $this->enc;
     }

@@ -1,7 +1,7 @@
 <?php
 namespace Pleraque;
 
-abstract class Query
+abstract class Query implements \Stringable
 {
     protected string $query;
     protected \PDOStatement $stmt;

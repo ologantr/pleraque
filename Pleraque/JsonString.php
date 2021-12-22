@@ -1,7 +1,7 @@
 <?php
 namespace Pleraque;
 
-final class JsonString
+final class JsonString implements \Stringable
 {
     private string $json;
 
@@ -24,7 +24,7 @@ final class JsonString
         return new self($json);
     }
 
-    public function __toString()
+    public function __toString() : string
     {
         return $this->json;
     }
