@@ -60,21 +60,17 @@ final class Request
     {
         $regex = new U\Regex("#^HTTP_*#");
 
-        $h = function(string $key) : string
-        {
-            return implode("-", array_map(function(string $word) : string
-                                          {
-                                              return ucwords(strtolower($word));
-                                          }, explode("_", str_replace("HTTP_",
-                                                                      "",
-                                                                      $key))));
-        };
+        $h = fn(string $key) : string =>
+           implode("-", array_map(fn(string $word) : string =>
+                                  ucwords(strtolower($word)),
+                                  explode("_", str_replace("HTTP_",
+                                                           "",
+                                                           $key))));
 
         $filtered_server = array_filter($_SERVER,
-                                        function(string $k) use ($regex): bool
-                                        {
-                                            return $regex->match($k);
-                                        }, ARRAY_FILTER_USE_KEY);
+                                        fn(string $k) : bool =>
+                                        $regex->match($k),
+                                        ARRAY_FILTER_USE_KEY);
 
         $this->headers = array_combine(array_map($h,
                                                  array_keys($filtered_server)),
