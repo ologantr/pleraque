@@ -28,32 +28,21 @@ class DataMatcher
     private function buildFnDict()
     {
         $this->fnDict = [
-            "#string#" => function($toCheck) : bool
-            {
-                return is_string($toCheck);
-            },
-            "#?string#" => function($toCheck) : bool
-            {
-                return is_string($toCheck) || is_null($toCheck);
-            },
-            "#string_notempty#" => function($toCheck) : bool
-            {
-                return is_string($toCheck) && strlen($toCheck) !== 0;
-            },
-            "#int#" => function($toCheck) : bool
-            {
-                return is_int($toCheck);
-            },
-            "#dict#" => function($toCheck) : bool
-            {
-                return is_array($toCheck) &&
-                    $this->isDictionary($toCheck);
-            },
-            "#array#" => function($toCheck) : bool
-            {
-                return is_array($toCheck) &&
-                    !$this->isDictionary($toCheck);
-            },
+            "#string#" => (fn(mixed $toCheck) : bool =>
+                           is_string($toCheck)),
+            "#?string#" => (fn(mixed $toCheck) : bool =>
+                            is_string($toCheck) || is_null($toCheck)),
+            "#string_notempty#" => (fn(mixed $toCheck) : bool =>
+                                    is_string($toCheck) &&
+                                    strlen($toCheck) !== 0),
+            "#int#" => (fn(mixed $toCheck) : bool =>
+                        is_int($toCheck)),
+            "#dict#" => (fn(mixed $toCheck) : bool =>
+                         is_array($toCheck) &&
+                         $this->isDictionary($toCheck)),
+            "#array#" => (fn(mixed $toCheck) : bool =>
+                          is_array($toCheck) &&
+                          !$this->isDictionary($toCheck)),
             "#date#" => function($toCheck) : bool
             {
                 if(!is_string($toCheck)) return false;
@@ -67,10 +56,8 @@ class DataMatcher
     {
         $countOrig = count($arr);
         $countFilter = count(array_filter(array_keys($arr),
-                                          function($elem) : bool
-                                          {
-                                              return is_string($elem);
-                                          }));
+                                          fn(mixed $elem) : bool
+                                          => is_string($elem)));
 
         if($arr == [] || $countFilter == 0 || $countFilter < $countOrig)
             return false;
