@@ -10,6 +10,7 @@ final class Request
     private string $method;
     private U\JsonString $body;
     private array $headers;
+    private string $rawBody;
 
     private function __clone() {}
     public function __wakeup() {}
@@ -48,10 +49,10 @@ final class Request
 
     private function setBody() : void
     {
-        $body = file_get_contents("php://input");
+        $this->rawBody = file_get_contents("php://input");
 
-        if(!empty($body))
-            $this->body = U\JsonString::fromString($body);
+        if(!empty($this->rawBody))
+            $this->body = U\JsonString::fromString($this->rawBody);
         else
             $this->body = U\JsonString::fromArray([]);
     }
@@ -95,6 +96,11 @@ final class Request
     public function getHeaders() : array
     {
         return $this->headers;
+    }
+
+    public function getRawBody() : string
+    {
+        return $this->rawBody;
     }
 }
 ?>
