@@ -27,69 +27,52 @@ Note that API and results are subject to change as this is a work in progress.
 use Pleraque as P;
 use Pleraque\Utils as U;
 
-$c = new P\RestController();
-
-$c->addGetCommand(new class("test")
-                  extends P\RestCommand
+#[P\Route(U\HttpMethods::GET, "/test")]
+final class Test extends P\RestCommand 
 {
-    protected function preExecutionChecks() : void
-    {
+	protected function main() : P\Response
+	{
+		return P\JsonResponse::data(U\StatusCodes::OK, 
+			U\JsonString::fromArray(["res" => 1]));
+	}
+}
 
-    }
-
-    protected function commandMain() : void
-    {
-
-    }
-
-    protected function buildResponse() : P\Response
-    {
-        return P\JsonResponse::data(U\StatusCodes::OK,
-                                    U\JsonString::fromArray(["res" => 1]));
-    }
-});
-
-$c->addGetCommand(new class("test/{id}")
-                  extends P\RestCommand
+#[P\Route(U\HttpMethods::GET, "/test/{id}")]
+final class TestID extends P\RestCommand 
 {
-    protected function preExecutionChecks() : void
-    {
+	protected function main() : P\Response
+	{
+		$m = $this->getUrlParameters();
+		return P\JsonResponse::data(U\StatusCodes::OK, 
+			U\JsonString::fromArray(["id" => $m["id"]]));
+	}
+}
 
-    }
-
-    protected function commandMain() : void
-    {
-
-    }
-
-    protected function buildResponse() : P\Response
-    {
-        $m = $this->getParameters();
-        return P\JsonResponse::data(U\StatusCodes::OK,
-                                    U\JsonString::fromArray(["id" => $m["id"]]));
-    }
-});
-
-$c->addGetCommand(new class("user/{name:[a-z]+}")
-                  extends P\RestCommand
+#[P\Route(U\HttpMethods::GET, "/user/{name:[a-z]+}")]
+final class UserTest extends P\RestCommand 
 {
-    protected function preExecutionChecks() : void
-    {
+	protected function main() : P\Response
+	{
+		$m = $this->getUrlParameters();
+		return P\JsonResponse::data(U\StatusCodes::OK, 
+			U\JsonString::fromArray(["name" => $m["name"]]));
+	}
+}
 
-    }
+#[P\Route(U\HttpMethods::POST, "/user")]
+final class UserTest extends P\RestCommand 
+{
+	#[P\JsonBody(["name" => "#string#", "password" => "string"])]
+	private array $body;
 
-    protected function commandMain() : void
-    {
+	protected function main() : P\Response
+	{
+        registerUser($this->body["name"], $this->body["password"]);
+		return new P\EmptyResponse(U\StatusCodes::CREATED);
+	}
+}
 
-    }
-
-    protected function buildResponse() : P\Response
-    {
-        $m = $this->getParameters();
-        return P\JsonResponse::data(U\StatusCodes::OK,
-                                    U\JsonString::fromArray(["name" => $m["name"]]));
-    }
-});
+P\RestController::route();
 ```
 
 Result requesting GET /test:

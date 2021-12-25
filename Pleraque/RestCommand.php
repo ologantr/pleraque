@@ -3,34 +3,52 @@ namespace Pleraque;
 
 abstract class RestCommand
 {
-    private UriSpec $uriSpec;
-    private string $url;
+    private Route $route;
+    private \ReflectionClass $selfRefl;
 
-    public function __construct(string $uriSpec)
+    final public function __construct()
     {
-        $this->url = Request::getInstance()->getUrl();
-        $this->uriSpec = new UriSpec($uriSpec);
+        $this->selfRefl = new \ReflectionClass(static::class);
+        $attrs = $this->selfRefl->getAttributes(Route::class);
+        $this->route = $attrs[0]->newInstance();
     }
 
-    public function match() : bool
+    private function execPropertyAttributes() : void
     {
-        return $this->uriSpec->matchWith($this->url);
+        $props = array_filter($this->selfRefl->getProperties(),
+                              fn(\ReflectionProperty $prop) : bool
+                              =>
+                              count($prop->getAttributes(BodyAttribute::class,
+                                                         \ReflectionAttribute
+                                                         ::IS_INSTANCEOF))
+                              > 0);
+
+        foreach($props as $prop)
+        {
+            $attrs = $prop->getAttributes(BodyAttribute::class,
+                                          \ReflectionAttribute::IS_INSTANCEOF);
+            $prop->setAccessible(true);
+            $prop->setValue($this, $attrs[0]->newInstance()->get());
+            $prop->setAccessible(false);
+        }
     }
 
-    abstract protected function preExecutionChecks() : void;
-    abstract protected function commandMain() : void;
-    abstract protected function buildResponse() : Response;
+    final public function getRoute() : Route
+    {
+        return $this->route;
+    }
+
+    final protected function getUrlParameters() : array
+    {
+        return $this->route->getUrlParameters();
+    }
 
     final public function execute() : Response
     {
-        $this->preExecutionChecks();
-        $this->commandMain();
-        return $this->buildResponse();
+        $this->execPropertyAttributes();
+        return $this->main();
     }
 
-    final protected function getParameters() : array
-    {
-        return $this->uriSpec->getParameters($this->url);
-    }
+    abstract protected function main() : Response;
 }
 ?>
