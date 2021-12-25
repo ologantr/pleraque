@@ -11,6 +11,7 @@ final class Request
     private U\JsonString $body;
     private array $headers;
     private string $rawBody;
+    private array $urlQuery = [];
 
     private function __clone() {}
     public function __wakeup() {}
@@ -21,6 +22,7 @@ final class Request
         $this->setMethod();
         $this->setBody();
         $this->setHeaders();
+        $this->setUrlQuery();
     }
 
     public static function getInstance() : self
@@ -33,6 +35,12 @@ final class Request
         : void
     {
         self::$urlRetrieverFn = $fn;
+    }
+
+    private function setUrlQuery() : void
+    {
+        if(isset($_SERVER["QUERY_STRING"]))
+            parse_str($_SERVER["QUERY_STRING"], $this->urlQuery);
     }
 
     private function setUrl() : void
@@ -101,6 +109,11 @@ final class Request
     public function getRawBody() : string
     {
         return $this->rawBody;
+    }
+
+    public function getUrlQueryArray() : array
+    {
+        return $this->urlQuery;
     }
 }
 ?>
